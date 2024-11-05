@@ -1,0 +1,14 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: DIGITAL-ELECTION-MANAGEMENT
+  datasource:
+    url: jdbc:mysql://localhost:3306/digital_voting_db
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
