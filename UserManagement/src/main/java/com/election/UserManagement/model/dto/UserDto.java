@@ -9,7 +9,7 @@ import java.sql.Date;
 @Data
 
 public class UserDto {
-    private Long id;
+    private Long userId;
 
     private String registrationNumber;
 
