@@ -5,4 +5,6 @@ import com.election.UserManagement.model.dto.UserDto;
 
 public interface UserService {
     GenericResponseV2<UserDto> createUser(UserDto userDto);
+
+    GenericResponseV2<UserDto> updateById(UserDto userDto);
 }
