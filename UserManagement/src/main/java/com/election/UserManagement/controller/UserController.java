@@ -6,10 +6,9 @@ import com.election.UserManagement.model.dto.UserDto;
 import com.election.UserManagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,6 +24,28 @@ public class UserController {
             return ResponseEntity.ok().body(response);
         }else {
             return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<GenericResponseV2<List<UserDto>>> getAllUsers(){
+        GenericResponseV2<List<UserDto>> response = userService.getAllUsers();
+        if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(response);
+        }else {
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @GetMapping("/user-id")
+    public ResponseEntity<GenericResponseV2<UserDto>> getUserById(
+            @RequestParam(name = "userId")Long userId
+    ){
+        GenericResponseV2<UserDto> responseV2 = userService.getUserById(userId);
+        if (responseV2.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(responseV2);
+        }else {
+            return ResponseEntity.badRequest().body(responseV2);
         }
     }
 }
