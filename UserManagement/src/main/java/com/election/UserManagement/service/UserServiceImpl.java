@@ -8,10 +8,8 @@ import com.election.UserManagement.model.entity.User;
 import com.election.UserManagement.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
- develop
 import java.util.List;
 import java.util.Optional;
-main
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +42,6 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    develop
     public GenericResponseV2<List<UserDto>> getAllUsers() {
         try {
             List<UserDto> users = userRepository.findAll().stream().map(userMapper::userToUserDto).toList();
@@ -112,13 +109,9 @@ public class UserServiceImpl implements UserService{
             return GenericResponseV2.<UserDto>builder()
                     .status(ResponseStatusEnum.ERROR)
                     .message("Unable to update user: " + e.getMessage())
- main
                     ._embedded(null)
                     .build();
         }
     }
- develop
 
-
- main
 }
