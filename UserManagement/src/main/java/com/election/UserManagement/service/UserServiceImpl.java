@@ -8,8 +8,10 @@ import com.election.UserManagement.model.entity.User;
 import com.election.UserManagement.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
+ develop
 import java.util.List;
+import java.util.Optional;
+main
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +44,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    develop
     public GenericResponseV2<List<UserDto>> getAllUsers() {
         try {
             List<UserDto> users = userRepository.findAll().stream().map(userMapper::userToUserDto).toList();
@@ -76,8 +79,46 @@ public class UserServiceImpl implements UserService{
             return GenericResponseV2.<UserDto>builder()
                     .status(ResponseStatusEnum.ERROR)
                     .message("Unable to retrieve user")
+                    
+    public GenericResponseV2<UserDto> updateById(UserDto userDto) {
+        try {
+            //Check if the user exists in the database by ID
+            Optional<User> existingUserOpt = userRepository.findById(userDto.getUserId());
+            if (!existingUserOpt.isPresent()) {
+                // If the user does not exist, return a 404 error with an appropriate message
+                return GenericResponseV2.<UserDto>builder()
+                        .status(ResponseStatusEnum.ERROR)
+                        .message("User not found")
+                        ._embedded(null)
+                        .build();
+            }
+            //Convert the UserDto to User entity
+            User userToBeUpdated = userMapper.userDtoToUser(userDto);
+            // Save the updated User entity in the database
+            User updatedUser = userRepository.save(userToBeUpdated);
+
+            //Convert the updated User entity back to UserDto for the response
+            UserDto response = userMapper.userToUserDto(updatedUser);
+            // Return a success response with the updated user data
+            return GenericResponseV2.<UserDto>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("User updated successfully")
+                    ._embedded(response)
+                    .build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Return an error response if there was an issue
+            return GenericResponseV2.<UserDto>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("Unable to update user: " + e.getMessage())
+ main
                     ._embedded(null)
                     .build();
         }
     }
+ develop
+
+
+ main
 }
