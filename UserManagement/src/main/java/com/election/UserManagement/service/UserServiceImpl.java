@@ -71,11 +71,15 @@ public class UserServiceImpl implements UserService{
                     .message("User retrieved successfully")
                     ._embedded(response)
                     .build();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return GenericResponseV2.<UserDto>builder()
                     .status(ResponseStatusEnum.ERROR)
                     .message("Unable to retrieve user")
+                    ._embedded(null)
+                    .build();
+        }
+    }
                     
     public GenericResponseV2<UserDto> updateById(UserDto userDto) {
         try {
@@ -113,5 +117,4 @@ public class UserServiceImpl implements UserService{
                     .build();
         }
     }
-
 }
