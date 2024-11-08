@@ -7,11 +7,10 @@ import com.election.UserManagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
- develop
+
 
 import java.util.List;
 
- main
 
 @RestController
 @RequiredArgsConstructor
@@ -29,16 +28,21 @@ public class UserController {
             return ResponseEntity.badRequest().body(response);
         }
     }
- develop
+
 
     @GetMapping
-    public ResponseEntity<GenericResponseV2<List<UserDto>>> getAllUsers(){
+    public ResponseEntity<GenericResponseV2<List<UserDto>>> getAllUsers() {
         GenericResponseV2<List<UserDto>> response = userService.getAllUsers();
+        if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
+            return ResponseEntity.ok().body(response);
+        }else {
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
    
     @PutMapping("/{userId}")
     public ResponseEntity<GenericResponseV2<UserDto>>updateById(@PathVariable Long userId,@RequestBody UserDto userDto){
         GenericResponseV2<UserDto>response = userService.updateById(userDto);
- main
         if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
             return ResponseEntity.ok().body(response);
         }else {
@@ -46,7 +50,7 @@ public class UserController {
         }
     }
 
- develop
+
     @GetMapping("/user-id")
     public ResponseEntity<GenericResponseV2<UserDto>> getUserById(
             @RequestParam(name = "userId")Long userId
@@ -59,6 +63,5 @@ public class UserController {
         }
     }
 
-      
- main
+
 }
