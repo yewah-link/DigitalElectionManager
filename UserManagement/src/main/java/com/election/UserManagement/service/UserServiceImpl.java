@@ -8,8 +8,10 @@ import com.election.UserManagement.model.entity.User;
 import com.election.UserManagement.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
+ develop
+import java.util.List;
 import java.util.Optional;
+main
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +44,42 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    develop
+    public GenericResponseV2<List<UserDto>> getAllUsers() {
+        try {
+            List<UserDto> users = userRepository.findAll().stream().map(userMapper::userToUserDto).toList();
+            return GenericResponseV2.<List<UserDto>>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("Users retrieved successfully")
+                    ._embedded(users)
+                    .build();
+        }catch (Exception e){
+            e.printStackTrace();
+            return GenericResponseV2.<List<UserDto>>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("Unable to retrieve users")
+                    ._embedded(null)
+                    .build();
+
+        }
+    }
+
+    @Override
+    public GenericResponseV2<UserDto> getUserById(Long userId) {
+        try {
+            User userFromDb = userRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("User not found"));
+            UserDto response = userMapper.userToUserDto(userFromDb);
+            return GenericResponseV2.<UserDto>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("User retrieved successfully")
+                    ._embedded(response)
+                    .build();
+        }catch (Exception e){
+            e.printStackTrace();
+            return GenericResponseV2.<UserDto>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("Unable to retrieve user")
+                    
     public GenericResponseV2<UserDto> updateById(UserDto userDto) {
         try {
             //Check if the user exists in the database by ID
@@ -74,9 +112,13 @@ public class UserServiceImpl implements UserService{
             return GenericResponseV2.<UserDto>builder()
                     .status(ResponseStatusEnum.ERROR)
                     .message("Unable to update user: " + e.getMessage())
+ main
                     ._embedded(null)
                     .build();
         }
     }
+ develop
 
+
+ main
 }
