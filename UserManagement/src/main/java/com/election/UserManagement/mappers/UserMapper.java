@@ -1,7 +1,7 @@
 package com.election.UserManagement.mappers;
 
 import com.election.UserManagement.model.dto.UserDto;
-import com.election.UserManagement.model.entity.User;
+import com.election.UserManagement.model.entity.Users;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -11,6 +11,6 @@ import org.mapstruct.factory.Mappers;
 public interface UserMapper {
 
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
-    User userDtoToUser(UserDto userDto);
-    UserDto userToUserDto(User user);
+    Users userDtoToUser(UserDto userDto);
+    UserDto userToUserDto(Users user);
 }
