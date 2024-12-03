@@ -4,7 +4,7 @@ import com.election.UserManagement.common.GenericResponseV2;
 import com.election.UserManagement.common.ResponseStatusEnum;
 import com.election.UserManagement.mappers.UserMapper;
 import com.election.UserManagement.model.dto.UserDto;
-import com.election.UserManagement.model.entity.User;
+import com.election.UserManagement.model.entity.Users;
 import com.election.UserManagement.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,9 +20,9 @@ public class UserServiceImpl implements UserService{
     public GenericResponseV2<UserDto> createUser(UserDto userDto) {
         try {
             // 1. Convert UserDto to User entity for purpose of saving in the db
-            User userToBeSaved = userMapper.userDtoToUser(userDto);
+            Users userToBeSaved = userMapper.userDtoToUser(userDto);
             // 2. Save the User entity to the database
-            User savedUser = userRepository.save(userToBeSaved);
+            Users savedUser = userRepository.save(userToBeSaved);
             // 3. Convert the saved User entity back to UserDto for response
             UserDto response = userMapper.userToUserDto(savedUser);
 
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public GenericResponseV2<UserDto> getUserById(Long userId) {
         try {
-            User userFromDb = userRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("User not found"));
+            Users userFromDb = userRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("User not found"));
             UserDto response = userMapper.userToUserDto(userFromDb);
             return GenericResponseV2.<UserDto>builder()
                     .status(ResponseStatusEnum.SUCCESS)
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService{
     public GenericResponseV2<UserDto> updateById(UserDto userDto) {
         try {
             //Check if the user exists in the database by ID
-            Optional<User> existingUserOpt = userRepository.findById(userDto.getUserId());
+            Optional<Users> existingUserOpt = userRepository.findById(userDto.getUserId());
             if (!existingUserOpt.isPresent()) {
                 // If the user does not exist, return a 404 error with an appropriate message
                 return GenericResponseV2.<UserDto>builder()
@@ -94,9 +94,9 @@ public class UserServiceImpl implements UserService{
                         .build();
             }
             //Convert the UserDto to User entity
-            User userToBeUpdated = userMapper.userDtoToUser(userDto);
+            Users userToBeUpdated = userMapper.userDtoToUser(userDto);
             // Save the updated User entity in the database
-            User updatedUser = userRepository.save(userToBeUpdated);
+            Users updatedUser = userRepository.save(userToBeUpdated);
 
             //Convert the updated User entity back to UserDto for the response
             UserDto response = userMapper.userToUserDto(updatedUser);
