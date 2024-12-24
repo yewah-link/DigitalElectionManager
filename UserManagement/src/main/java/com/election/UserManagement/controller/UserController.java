@@ -20,7 +20,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<GenericResponseV2<UserDto>> createUser(@RequestBody UserDto userDto){
+    public ResponseEntity<GenericResponseV2<UserDto>> createdUser(@RequestBody UserDto userDto){
         GenericResponseV2<UserDto> response = userService.createUser(userDto);
         if (response.getStatus().equals(ResponseStatusEnum.SUCCESS)){
             return ResponseEntity.ok().body(response);
