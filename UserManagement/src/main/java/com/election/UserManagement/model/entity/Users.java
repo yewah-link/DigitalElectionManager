@@ -25,7 +25,7 @@ public class Users {
     @Column(unique = true)
     private String registrationNumber;
 
-    private String name;
+    private String username;
 
     @Column(unique = true)
     private String email;

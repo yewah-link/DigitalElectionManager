@@ -5,17 +5,22 @@ import com.election.UserManagement.common.ResponseStatusEnum;
 import com.election.UserManagement.mappers.UserMapper;
 import com.election.UserManagement.model.dto.UserDto;
 import com.election.UserManagement.model.entity.Users;
+import com.election.UserManagement.model.principle.UserPrincipal;
 import com.election.UserManagement.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+
     @Override
     public GenericResponseV2<UserDto> createUser(UserDto userDto) {
         try {
@@ -116,5 +121,17 @@ public class UserServiceImpl implements UserService{
                     ._embedded(null)
                     .build();
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Users user = userRepository.findByUsername(username);
+
+        if(user == null){
+            System.out.println("User Not Found");
+            throw  new UsernameNotFoundException("User not found");
+
+        }
+        return new UserPrincipal(user);
     }
 }
