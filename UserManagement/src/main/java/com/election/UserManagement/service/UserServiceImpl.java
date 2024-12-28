@@ -11,15 +11,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService,UserDetailsService {
+
     private final UserRepository userRepository;
+
     private final UserMapper userMapper;
+
+    //private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12); // Password encoding
 
     @Override
     public GenericResponseV2<UserDto> createUser(UserDto userDto) {
@@ -63,6 +68,45 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                     ._embedded(null)
                     .build();
 
+        }
+    }
+
+    @Override
+    public GenericResponseV2<UserDto> register(UserDto userDto) {
+        try {
+            // Check if the user already exists by username
+            if (userRepository.existsByUsername(userDto.getUsername())) {
+                return GenericResponseV2.<UserDto>builder()
+                        .status(ResponseStatusEnum.ERROR)
+                        .message("Username already exists")
+                        ._embedded(null)
+                        .build();
+            }
+
+            // Encrypt password before saving the user
+           // userDto.setPassword(encoder.encode(userDto.getPassword()));
+
+            // Convert UserDto to Users entity
+            Users userToBeSaved = userMapper.userDtoToUser(userDto);
+
+            // Save the user
+            Users savedUser = userRepository.save(userToBeSaved);
+
+            // Convert the saved User entity to UserDto for response
+            UserDto response = userMapper.userToUserDto(savedUser);
+
+            return GenericResponseV2.<UserDto>builder()
+                    .status(ResponseStatusEnum.SUCCESS)
+                    .message("User registered successfully")
+                    ._embedded(response)
+                    .build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return GenericResponseV2.<UserDto>builder()
+                    .status(ResponseStatusEnum.ERROR)
+                    .message("Unable to register user")
+                    ._embedded(null)
+                    .build();
         }
     }
 
@@ -123,7 +167,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
-    @Override
+  @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Users user = userRepository.findByUsername(username);
 
@@ -134,4 +178,5 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         return new UserPrincipal(user);
     }
+
 }

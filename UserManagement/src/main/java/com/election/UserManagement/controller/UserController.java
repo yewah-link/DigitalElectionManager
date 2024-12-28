@@ -17,8 +17,21 @@ import java.util.List;
 @RequestMapping("/api/v1/user")
 public class UserController {
 
+
     private final UserService userService;
 
+
+    @PostMapping("/register")
+    public ResponseEntity<GenericResponseV2<UserDto>> registerUser (@RequestBody UserDto userDto){
+        GenericResponseV2<UserDto> response = userService.register(userDto);
+        if(response.getStatus() == ResponseStatusEnum.SUCCESS){
+            return ResponseEntity.ok().body(response);
+        }else {
+            return ResponseEntity.badRequest().body(response);
+        }
+
+
+    }
     @PostMapping
     public ResponseEntity<GenericResponseV2<UserDto>> createdUser(@RequestBody UserDto userDto){
         GenericResponseV2<UserDto> response = userService.createUser(userDto);
